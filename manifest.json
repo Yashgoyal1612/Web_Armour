@@ -1,0 +1,12 @@
+{
+    "name": "Chrome Extension",
+    "version": "1.0.0",
+    "description": "Your shiled against online threats",
+    "manifest_version": 3,
+    "author": "Hashcat",
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "Web Armour"
+    }
+
+}
