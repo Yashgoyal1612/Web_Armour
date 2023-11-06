@@ -1,0 +1,39 @@
+{
+  "manifest_version":3,
+  "name":"spooky things",
+  "version":"1.0",
+  "description": "spooky tihngs tries to block & log all the malicious request made by your browser!",
+  "action":
+  {
+
+    "browser_icon": "icon.png",
+    "default_popup":"popup.html",
+    "default_title":"<change me!!>"
+  },
+
+	"permissions": [
+    	"tabs","storage"        
+		],	
+
+  "icons":
+  {
+     
+  },
+  "content_scripts":
+  [
+    {
+      "js": ["scripts/content.js"],
+      "matches":  [
+        "https://developer.chrome.com/docs/extensions/*",
+        "https://developer.chrome.com/docs/webstore/*"
+      ],
+			
+			"world":"ISOLATED"
+    }
+  ], 
+  "backgroud":{
+       "service_worker" : "scripts/background.js"
+      }
+
+
+}
