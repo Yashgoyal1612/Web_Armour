@@ -11,29 +11,39 @@
     "default_title":"<change me!!>"
   },
 
+  "background":{
+       "service_worker" : "scripts/background.js"
+  },
+
 	"permissions": [
-    	"tabs","storage"        
+    	"tabs", "storage", "commands", "activeTab", "nativeMessaging"
 		],	
 
   "icons":
   {
      
   },
+  "commands": {
+    "yourCommandName":  {
+      "suggested_key": {
+        "default": "Ctrl+Shift+U",
+        "mac": "Command+Shift+U"
+      },
+      "description": "Description of your command"
+    }
+  },
+
   "content_scripts":
   [
     {
       "js": ["scripts/content.js"],
       "matches":  [
-        "https://developer.chrome.com/docs/extensions/*",
-        "https://developer.chrome.com/docs/webstore/*"
+        "https://*/*"
       ],
 			
 			"world":"ISOLATED"
     }
-  ], 
-  "backgroud":{
-       "service_worker" : "scripts/background.js"
-      }
+  ]
 
 
 }

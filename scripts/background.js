@@ -1,26 +1,27 @@
-// function that injects code to a specific tab
-function injectScript(tabId) {
+var portKey = "victoria";
 
-    chrome.scripting.executeScript(
-        {
-            target: {tabId: tabId},
-            files: ['content.js'],
-        }
-    );
 
-}
 
-// adds a listener to tab change
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+chrome.tabs.onActivated.addListener( function(activeInfo){
+    chrome.tabs.get(activeInfo.tabId, function(tab){
+        url = tab.url;
+        chrome.runtime.onConnect.addListener(function(port) {
+        console.assert(port.name === portKey);
+        port.onMessage.addListener(function(msg) {
+            // console.log(url);
 
-    // check for a URL in the changeInfo parameter (url is only added when it is changed)
-    if (changeInfo.url) {
+          port.postMessage({damn:url}); // change the damn with url
+        });
+  });       
+        // console.log(y);
+        // send the URL to the content.js file 
         
-        // calls the inject function
-        injectScript(tabId);
-
-    }
+    })
 });
 
-
-
+chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
+    if (tab.active && change.url) {
+        console.log("you are here: "+change.url);
+         
+    }
+});
