@@ -7,7 +7,7 @@
   {
 
     "browser_icon": "icon.png",
-    "default_popup":"popup.html",
+    "default_popup":"index.html",
     "default_title":"<change me!!>"
   },
 
@@ -36,11 +36,12 @@
   "content_scripts":
   [
     {
-      "js": ["scripts/content.js"],
+      "js": ["scripts/content.js"
+        ],
       "matches":  [
         "https://*/*"
       ],
-			
+			"css":["css/style.css"],
 			"world":"ISOLATED"
     }
   ]
