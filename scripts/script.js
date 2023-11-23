@@ -1,4 +1,6 @@
 
+
+
 document.getElementById("horse").addEventListener("click", submitAPI);
 
 function submitAPI(){
@@ -14,6 +16,8 @@ chrome.storage.sync.get(["key"]).then((result) => {
   console.log("Value currently is " + result.key);
 });
 }
+
+
 
 // document.addEventListener('DOMContentLoaded', function() {
 //     const checkboxes = document.querySelectorAll('.switch input[type="checkbox"]');
