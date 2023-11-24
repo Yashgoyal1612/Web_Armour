@@ -14,7 +14,7 @@ port.onMessage.addListener(function(msg) {
 // var initialStage = 1;
 var score = 0;
 let ipqualityscore_url = "https://www.ipqualityscore.com/api/json/url/";
-let API_KEY = "Ig0bA7OqPLC3L4FQtihqc2xSPjiDcp9O" + '/'; 
+let API_KEY =  ''; //"Ig0bA7OqPLC3L4FQtihqc2xSPjiDcp9O" + '/'; 
 
 function checkLongURL(url, len) {
   if (url.length > len) {
@@ -34,37 +34,60 @@ function checkShortURL(url) {
 
 }
 
-async function sendHTTPReq(url) {
-  url = ipqualityscore_url + API_KEY + url;
+// API json data Handler
+const DataHandler = (jsonData) => {
+
+  if(jsonData.malware)
+    score+=1;
+  if(jsonData.redirected)
+    score+=1;
+  if(jsonData.phishing)
+    score+=1;
+  if(jsonData.risk_score !== 0)
+    score+=1;
+  if(jsonData.spamming)
+    score+=1;
+  if(jsonData.unsafe)
+    score+=1;
+  if(jsonData.suspicious)
+    score+=1;
+
+} 
+
+// send the HTTP req. 
+const sendHTTPReq = async (url) => {
 
   try {
-    console.log('URL to be ipqualify: ' + url);
-    let response = await fetch(url, { mode: 'no-cors' }); // http client 
-    const data = await response.json();
-    console.log("Body: " + data);
-    return true;
+    url = ipqualityscore_url + API_KEY + url;
+    let response = await fetch(url);
+      if (response.ok) {
+      const data = await response.json(); // Parse JSON asynchronously
+      console.log('Body:', data);
+      return true;
+    } else {
+      console.log('Response error:', response.status, response.statusText);
+      return false;
+    }
   } catch (err) {
-    console.log("Exception while sending the request: " + err);
+    console.error('Exception while sending the request:', err);
     return false;
   }
-}
+};
 
-
-// function setup() {
-//   if (API_KEY === "") {
-//     console.log("API key is missing. Please provide an API key.");
-//     // show a popup window to store the API key of the user...
-//     return false;
-//   }
-//   // Other setup logic...
-//   return true;
-// }
 
 function checkIDN(url) {
-    if(url.isascii())
-        return false;
-    score+=1;
-    return true;
+  let tmp_url = url.split('/');
+  let domain = tmp_url[2];
+  for(let i=0; i<domain.length; i++)
+  {
+    if(domain.charCodeAt(i) > 127)
+      {
+        score+=1;
+        return true;
+      }
+      return false;
+  }
+    
 }
 
 async function isRedirectingToAnotherDomain(url) {
@@ -92,12 +115,23 @@ function main(url) {
   
 	if(API_KEY !== '')
 	{
+    //offline 2
     let tmp_url = url.split('/');
     let domain = tmp_url[2];
     let scheme = tmp_url[0].slice(0, -1)+'%3a%2f%2f';
     url = scheme+domain
 		sendHTTPReq(url);
 	}
+  else 
+  {
+    //online 3
+    checkLongURL(url);
+    checkShortURL(url);
+    checkIDN(url); 
+    isRedirectingToAnotherDomain(url);
+  }
+
+  console.log('Final Score: '+score);
 }
 
 
